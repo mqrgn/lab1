@@ -4,7 +4,7 @@ class CinemaError(Exception):
 
 
 class SeatAlreadyBookedError(CinemaError):
-    """Исключение, место забронировано"""
+    """Место забронировано"""
     pass
 
 
