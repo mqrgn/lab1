@@ -1,4 +1,4 @@
-from typing import List, Tuple, Set, Union
+from typing import List, Tuple, Union
 from .exceptions import InvalidSeatError, SeatBookedError
 
 
@@ -20,7 +20,7 @@ class CinemaHall:
             return True
         raise InvalidSeatError()
 
-    """Метод для бронирования места"""
+    """Метод для резервирования места в зале"""
 
     def reserve_seat(self, row: int, seat: int) -> bool:
 
@@ -50,7 +50,7 @@ class CinemaHall:
 
     """Геттер доступных для бронирования мест"""
 
-    def get_available_seat(self) -> List[Tuple[int, int]]:
+    def get_available_seats(self) -> List[Tuple[int, int]]:
         all_seats = [(r, s) for r in range(1, self.rows + 1)
                      for s in range(1, self.seats_per_row + 1)]
         available_seats = [seat for seat in all_seats if seat not in self.reserved_seats]
