@@ -19,7 +19,16 @@ class SessionNotFoundError(CinemaError):
     pass
 
 
+class UserNotFound(CinemaError):
+    """Пользователь не найден"""
+    pass
+
+
+class BookingError(CinemaError):
+    """Ошибка бронирования"""
+    pass
+
+
 class FileOperationError(CinemaError):
     """Ошибка работы с файлами"""
     pass
-
