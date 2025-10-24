@@ -81,9 +81,11 @@ class CinemaHall:
         }
         return hall_dict
 
+    """Десериализация словаря"""
     @classmethod
     def from_dict(cls, data: dict) -> 'CinemaHall':
         hall = cls(data['id'], data['name'], data['rows'], data['seats_per_row'])
         hall.reserved_seats = set(tuple(seat) for seat in data['reserved_seats'])
         hall.total_seats = data['total_seats']
+        return hall
 
