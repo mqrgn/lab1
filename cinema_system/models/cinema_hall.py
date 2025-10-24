@@ -4,6 +4,7 @@ from .exceptions import InvalidSeatError, SeatBookedError
 
 class CinemaHall:
     """Инициализация кинозала"""
+
     def __init__(self, hall_id: int, name: str, rows: int, seats_per_row: int):
         self.id = hall_id
         self.name = name
@@ -13,12 +14,14 @@ class CinemaHall:
         self.reserved_seats = set()
 
     """Метод для проверки валидности указанного места в зале"""
+
     def is_valid_seat(self, row: int, seat: int) -> bool:
         if 0 < row <= self.rows and 0 < seat <= self.seats_per_row:
             return True
         raise InvalidSeatError()
 
     """Метод для бронирования места"""
+
     def reserve_seat(self, row: int, seat: int) -> bool:
 
         if not self.is_valid_seat(row, seat):
@@ -32,6 +35,7 @@ class CinemaHall:
         return True
 
     """Освободить место"""
+
     def to_free_seat(self, row: int, seat: int) -> bool:
 
         if not self.is_valid_seat(row, seat):
@@ -45,6 +49,7 @@ class CinemaHall:
         return True
 
     """Геттер доступных для бронирования мест"""
+
     def get_available_seat(self) -> List[Tuple[int, int]]:
         all_seats = [(r, s) for r in range(1, self.rows + 1)
                      for s in range(1, self.seats_per_row + 1)]
@@ -52,6 +57,7 @@ class CinemaHall:
         return available_seats
 
     """Геттер карты зала с забронированными и доступными местами"""
+
     def get_map_hall(self) -> List[Union[Tuple[int, int], str]]:
         matrix = []
         for row in range(1, self.rows + 1):
@@ -62,3 +68,22 @@ class CinemaHall:
                 else:
                     matrix.append(seat)
         return matrix
+
+    """Сериализация в словарь"""
+    def to_dict(self) -> dict:
+        hall_dict = {
+            "id": self.id,
+            "name": self.name,
+            "rows": self.rows,
+            "seats_per_row": self.seats_per_row,
+            "total_seats": self.total_seats,
+            "reserved_seats": list(self.reserved_seats)
+        }
+        return hall_dict
+
+    @classmethod
+    def from_dict(cls, data: dict) -> 'CinemaHall':
+        hall = cls(data['id'], data['name'], data['rows'], data['seats_per_row'])
+        hall.reserved_seats = set(tuple(seat) for seat in data['reserved_seats'])
+        hall.total_seats = data['total_seats']
+
