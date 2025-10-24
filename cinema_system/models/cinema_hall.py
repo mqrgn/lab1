@@ -81,7 +81,7 @@ class CinemaHall:
         }
         return hall_dict
 
-    """Десериализация словаря"""
+    """Десериализация словаря в объект класса"""
     @classmethod
     def from_dict(cls, data: dict) -> 'CinemaHall':
         hall = cls(data['id'], data['name'], data['rows'], data['seats_per_row'])
