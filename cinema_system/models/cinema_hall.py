@@ -26,10 +26,19 @@ class CinemaHall:
 
         seat_key = (row, seat)
         if seat_key in self.reserved_seats:
-            raise SeatAlreadyBookedError(f"{seat} место, {row} ряд уже забронированы")
+            raise SeatBookedError(f"{seat} место, {row} ряд уже забронированы")
 
         self.reserved_seats.add(seat_key)
         return True
 
+
+    def to_free_seat(self, row: int, seat: int) -> bool:
+
+        if not self.is_valid_seat(row, seat):
+            raise InvalidSeatError(f"Указано неверное место: {row} ряд, {seat} место")
+
+        seat_key = (row, seat)
+        if seat_key in self.reserved_seats:
+            raise (f"")
 
 

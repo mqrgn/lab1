@@ -3,8 +3,9 @@ class CinemaError(Exception):
     pass
 
 
-class SeatAlreadyBookedError(CinemaError):
+class SeatBookedError(CinemaError):
     """Место забронировано"""
+    """Или место и так свободно"""
     pass
 
 
