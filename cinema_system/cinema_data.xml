@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cinema_theater>
+    <users>
+        <user>
+            <user_id>1</user_id>
+            <name>Иван Иванов</name>
+        </user>
+        <user>
+            <user_id>2</user_id>
+            <name>Мария Петрова</name>
+        </user>
+    </users>
+
+    <halls>
+        <hall>
+            <id>1</id>
+            <name>Красный зал</name>
+            <rows>5</rows>
+            <seats_per_row>8</seats_per_row>
+            <total_seats>40</total_seats>
+            <reserved_seats>
+                <seat>
+                    <row>2</row>
+                    <seat>3</seat>
+                </seat>
+                <seat>
+                    <row>2</row>
+                    <seat>4</seat>
+                </seat>
+                <seat>
+                    <row>3</row>
+                    <seat>5</seat>
+                </seat>
+            </reserved_seats>
+        </hall>
+        <hall>
+            <id>2</id>
+            <name>Синий зал</name>
+            <rows>6</rows>
+            <seats_per_row>10</seats_per_row>
+            <total_seats>60</total_seats>
+            <reserved_seats>
+                <seat>
+                    <row>1</row>
+                    <seat>1</seat>
+                </seat>
+                <seat>
+                    <row>4</row>
+                    <seat>7</seat>
+                </seat>
+            </reserved_seats>
+        </hall>
+    </halls>
+
+    <films>
+        <film>
+            <film_id>1</film_id>
+            <title>Аватар</title>
+            <duration>162</duration>
+            <genre>фантастика</genre>
+            <rating>8.1</rating>
+        </film>
+        <film>
+            <film_id>2</film_id>
+            <title>Интерстеллар</title>
+            <duration>169</duration>
+            <genre>фантастика</genre>
+            <rating>8.6</rating>
+        </film>
+        <film>
+            <film_id>3</film_id>
+            <title>Король Лев</title>
+            <duration>88</duration>
+            <genre>мультфильм</genre>
+            <rating>8.5</rating>
+        </film>
+    </films>
+
+    <sessions>
+        <session>
+            <session_id>1</session_id>
+            <movie_id>1</movie_id>
+            <hall_id>1</hall_id>
+            <time>2024-01-20 18:00</time>
+            <price>350</price>
+        </session>
+        <session>
+            <session_id>2</session_id>
+            <movie_id>2</movie_id>
+            <hall_id>2</hall_id>
+            <time>2024-01-21 20:00</time>
+            <price>400</price>
+        </session>
+        <session>
+            <session_id>3</session_id>
+            <movie_id>3</movie_id>
+            <hall_id>1</hall_id>
+            <time>2024-01-22 16:00</time>
+            <price>300</price>
+        </session>
+    </sessions>
+
+    <bookings>
+        <booking>
+            <booking_id>1</booking_id>
+            <user_id>1</user_id>
+            <session_id>1</session_id>
+            <row>2</row>
+            <seat>3</seat>
+        </booking>
+        <booking>
+            <booking_id>2</booking_id>
+            <user_id>1</user_id>
+            <session_id>1</session_id>
+            <row>2</row>
+            <seat>4</seat>
+        </booking>
+        <booking>
+            <booking_id>3</booking_id>
+            <user_id>2</user_id>
+            <session_id>2</session_id>
+            <row>1</row>
+            <seat>1</seat>
+        </booking>
+    </bookings>
+
+    <next_user_id>3</next_user_id>
+    <next_booking_id>4</next_booking_id>
+</cinema_theater>
