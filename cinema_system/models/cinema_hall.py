@@ -89,3 +89,9 @@ class CinemaHall:
         hall.total_seats = data['total_seats']
         return hall
 
+    """Спец-метод для более приятного отображения объектов класса"""
+    def __repr__(self) -> str:
+        return (f"CinemaHall(id={self.id}, name='{self.name}', "
+                f"rows={self.rows}, seats_per_row={self.seats_per_row}, "
+                f"total_seats={self.total_seats}, "
+                f"reserved_seats={len(self.reserved_seats)})")
