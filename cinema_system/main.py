@@ -299,7 +299,7 @@ class CinemaApp:
             booking_choice = int(input("Выберите бронь для отмены: ")) - 1
 
             if booking_choice < 0 or booking_choice >= len(bookings):
-                print("Неверный выбор брони!")
+                print("Неверный выбор брони!!!")
                 return
 
             selected_booking = bookings[booking_choice]

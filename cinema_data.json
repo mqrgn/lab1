@@ -1,0 +1,104 @@
+{
+  "users": [
+    {
+      "user_id": 1,
+      "name": "Олег"
+    },
+    {
+      "user_id": 2,
+      "name": "Валера"
+    }
+  ],
+  "halls": [
+    {
+      "id": 1,
+      "name": "Красный зал",
+      "rows": 5,
+      "seats_per_row": 8,
+      "total_seats": 40,
+      "reserved_seats": [
+        [
+          1,
+          7
+        ]
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Синий зал",
+      "rows": 6,
+      "seats_per_row": 10,
+      "total_seats": 60,
+      "reserved_seats": [
+        [
+          2,
+          10
+        ]
+      ]
+    }
+  ],
+  "films": [
+    {
+      "film_id": 1,
+      "title": "Человек-Паук",
+      "duration": 124,
+      "genre": "фантастика",
+      "rating": 7.9
+    },
+    {
+      "film_id": 2,
+      "title": "Мстители",
+      "duration": 182,
+      "genre": "фантастика",
+      "rating": 8.2
+    },
+    {
+      "film_id": 3,
+      "title": "Маша и медведь",
+      "duration": 78,
+      "genre": "мультфильм",
+      "rating": 9.3
+    }
+  ],
+  "sessions": [
+    {
+      "session_id": 1,
+      "movie_id": 1,
+      "hall_id": 1,
+      "time": "2025-10-25 18:00",
+      "price": 350
+    },
+    {
+      "session_id": 2,
+      "movie_id": 2,
+      "hall_id": 2,
+      "time": "2025-10-25 20:00",
+      "price": 400
+    },
+    {
+      "session_id": 3,
+      "movie_id": 3,
+      "hall_id": 1,
+      "time": "2025-10-25 16:00",
+      "price": 300
+    }
+  ],
+  "bookings": [
+    {
+      "booking_id": 1,
+      "user_id": 1,
+      "session_id": 1,
+      "row": 1,
+      "seat": 7
+    },
+    {
+      "booking_id": 2,
+      "user_id": 2,
+      "session_id": 2,
+      "row": 2,
+      "seat": 10
+    }
+  ],
+  "next_user_id": 3,
+  "next_booking_id": 3
+}
