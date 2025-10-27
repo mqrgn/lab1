@@ -1,17 +1,48 @@
-from cinema_system.models.cinema_hall import CinemaHall
-from cinema_system.models.film import Film
-from cinema_system.models.session import Session
-from cinema_system.services.cinema_service import CinemaTheater
-from models.exceptions import *
+from cinema_system.models import CinemaHall, Film, Session, UserNotFound, SessionNotFoundError, InvalidSeatError, \
+    SeatBookedError, BookingError
+from cinema_system.services import CinemaTheater, JSONFileService, DataSerializer, XMLFileService
 
 
 class CinemaApp:
+
     def __init__(self):
         self.cinema = CinemaTheater()
         self.current_user = None
-        self._initialize_sample_data()
+        self.data_file = "cinema_data.json"
+        self._load_data()
 
-    """Инициализация тестовыми данными"""
+    def _load_data(self):
+        try:
+            data = JSONFileService.load_from_json(self.data_file)
+            restored_data = DataSerializer.deserialize_cinema_data(data)
+
+            self.cinema.halls = restored_data['halls']
+            self.cinema.films = restored_data['films']
+            self.cinema.users = restored_data['users']
+            self.cinema.sessions = restored_data['sessions']
+            self.cinema.bookings = restored_data['bookings']
+            self.cinema.next_user_id = restored_data['next_user_id']
+            self.cinema.booking_service.next_booking_id = restored_data['next_booking_id']
+
+            print("Данные успешно загружены!")
+
+        except FileNotFoundError:
+            print("Файл данных не найден, создаем новый...")
+            self._initialize_sample_data()
+        except Exception as e:
+            print(f"Ошибка загрузки данных: {e}")
+            print("Создаем новые данные...")
+            self._initialize_sample_data()
+
+    def _save_data(self):
+        try:
+            data = DataSerializer.serialize_cinema_data(self.cinema)
+            JSONFileService.save_to_json(data, self.data_file)
+            XMLFileService.save_to_xml(data, "cinema_data.xml")
+            print("Данные успешно сохранены!")
+        except Exception as e:
+            print(f"Ошибка сохранения данных: {e}")
+
     def _initialize_sample_data(self):
         try:
             hall1 = CinemaHall(1, "Красный зал", 5, 8)
@@ -19,41 +50,42 @@ class CinemaApp:
             self.cinema.add_hall(hall1)
             self.cinema.add_hall(hall2)
 
-            film1 = Film(1, "Человек-паук", 162, "фантастика", 8.1)
-            film2 = Film(2, "Остров проклятых", 169, "фантастика", 8.6)
-            film3 = Film(3, "Маша и медведь", 88, "мультфильм", 8.5)
+            film1 = Film(1, "Человек-Паук", 124, "фантастика", 7.9)
+            film2 = Film(2, "Мстители", 187, "фантастика", 8.1)
+            film3 = Film(3, "Маша и медведь", 78, "мультфильм", 9.3)
             self.cinema.add_film(film1)
             self.cinema.add_film(film2)
             self.cinema.add_film(film3)
 
-            session1 = Session(1, film1, hall1, "18:00", 350)
-            session2 = Session(2, film2, hall2, "20:00", 560)
-            session3 = Session(3, film3, hall1, "16:00", 700)
+            session1 = Session(1, film1, hall1, "2024-01-20 18:00", 350)
+            session2 = Session(2, film2, hall2, "2024-01-21 20:00", 400)
+            session3 = Session(3, film3, hall1, "2024-01-22 16:00", 300)
             self.cinema.add_session(session1)
             self.cinema.add_session(session2)
             self.cinema.add_session(session3)
 
+            self._save_data()
+
         except Exception as e:
             print(f"Ошибка инициализации данных: {e}")
 
-    """Запуск"""
     def run(self):
-
         print("Добро пожаловать в онлайн-кинотеатр!")
 
-        while True:
-            try:
+        try:
+            while True:
                 if not self.current_user:
                     self._show_main_menu()
                 else:
                     self._show_user_menu()
-            except KeyboardInterrupt:
-                print("\n\nВыход из программы...")
-                break
-            except Exception as e:
-                print(f"Неожиданная ошибка: {e}")
+        except KeyboardInterrupt:
+            print("\n\nСохранение данных...")
+            self._save_data()
+            print("Выход из программы...")
+        except Exception as e:
+            print(f"Неожиданная ошибка: {e}")
+            self._save_data()
 
-    """Главное меню"""
     def _show_main_menu(self):
         print("\n" + "=" * 40)
         print("Онлайн-кинотеатр")
@@ -61,7 +93,8 @@ class CinemaApp:
         print("1. Регистрация")
         print("2. Просмотр фильмов")
         print("3. Поиск сеансов")
-        print("4. Выход")
+        print("4. Сохранить данные")
+        print("5. Выход")
 
         try:
             choice = input("Выберите действие: ").strip()
@@ -73,6 +106,9 @@ class CinemaApp:
             elif choice == "3":
                 self._find_sessions()
             elif choice == "4":
+                self._save_data()
+            elif choice == "5":
+                self._save_data()
                 print("До свидания!")
                 exit()
             else:
@@ -80,7 +116,6 @@ class CinemaApp:
         except Exception as e:
             print(f"Ошибка в меню: {e}")
 
-    """Меню пользователя"""
     def _show_user_menu(self):
         print(f"\nДобро пожаловать, {self.current_user.name}!")
         print("=" * 40)
@@ -89,7 +124,8 @@ class CinemaApp:
         print("3. Бронирование билета")
         print("4. Мои бронирования")
         print("5. Отмена бронирования")
-        print("6. Выйти из аккаунта")
+        print("6. Сохранить данные")
+        print("7. Выйти из аккаунта")
 
         try:
             choice = input("Выберите действие: ").strip()
@@ -105,13 +141,14 @@ class CinemaApp:
             elif choice == "5":
                 self._cancel_booking()
             elif choice == "6":
+                self._save_data()
+            elif choice == "7":
                 self.current_user = None
             else:
                 print("Неверный выбор!")
         except Exception as e:
             print(f"Ошибка в меню: {e}")
 
-    """Регистрация пользователя"""
     def _register_user(self):
         print("\n--- Регистрация ---")
         name = input("Введите ваше имя: ").strip()
@@ -123,13 +160,11 @@ class CinemaApp:
         try:
             user = self.cinema.register_user(name)
             self.current_user = user
+            self._save_data()
             print(f"Успешная регистрация! Добро пожаловать, {name}!")
-        except ValueError as e:
-            print(f"Ошибка регистрации: {e}")
         except Exception as e:
-            print(f"Неизвестная ошибка: {e}")
+            print(f"Ошибка регистрации: {e}")
 
-    """Показать все фильмы"""
     def _show_films(self):
         print("\n--- Все фильмы ---")
         films = self.cinema.films
@@ -141,7 +176,6 @@ class CinemaApp:
         for i, film in enumerate(films, 1):
             print(f"{i}. {film.title} ({film.genre}) - {film.get_duration_film()} - ★{film.rating}")
 
-    """Поиск сеансов по названию фильма"""
     def _find_sessions(self):
         print("\n--- Поиск сеансов ---")
         movie_title = input("Введите название фильма: ").strip()
@@ -164,12 +198,9 @@ class CinemaApp:
                 print(f"   Зал: {session.hall.name}, Время: {session.time}")
                 print(f"   Свободных мест: {available_seats}, Цена: {session.price} руб.")
 
-        except ValueError as e:
-            print(f"Ошибка поиска: {e}")
         except Exception as e:
-            print(f"Неизвестная ошибка: {e}")
+            print(f"Ошибка поиска: {e}")
 
-    """Бронирование билета"""
     def _book_ticket(self):
         if not self.current_user:
             print("Сначала войдите в систему!")
@@ -224,6 +255,7 @@ class CinemaApp:
                 row,
                 seat
             )
+            self._save_data()
             print(f"Билет успешно забронирован! Номер брони: {booking.booking_id}")
 
         except (ValueError, IndexError) as e:
@@ -233,12 +265,9 @@ class CinemaApp:
         except Exception as e:
             print(f"Неизвестная ошибка: {e}")
 
-
-    """Показать бронирования пользователя"""
     def _show_my_bookings(self):
-
         if not self.current_user:
-            print("Сначала войдите в систему")
+            print("Сначала войдите в систему!")
             return
 
         print("\n--- Мои бронирования ---")
@@ -251,7 +280,6 @@ class CinemaApp:
         for i, booking in enumerate(bookings, 1):
             print(f"{i}. {booking}")
 
-    """Отмена бронирования"""
     def _cancel_booking(self):
         if not self.current_user:
             print("Сначала войдите в систему!")
@@ -282,6 +310,7 @@ class CinemaApp:
             )
 
             if success:
+                self._save_data()
                 print("Бронь успешно отменена!")
             else:
                 print("Ошибка отмены брони")
